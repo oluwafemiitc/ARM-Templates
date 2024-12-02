@@ -18,7 +18,7 @@
         "properties": {
           "mode": "Incremental",
           "templateLink": {
-            "uri": "file:///D:\\Projects\\RESOURCES\\Arm-Temp\\storage-template.json",
+            "uri": "https://raw.githubusercontent.com/oluwafemiitc/ARM-Templates/refs/heads/main/storage-account-template.json",
             "contentVersion": "1.0.0.0"
           },
           "parameters": {
@@ -52,7 +52,7 @@
         "properties": {
           "mode": "Incremental",
           "templateLink": {
-            "uri": "file:///D:\\Projects\\RESOURCES\\Arm-Temp\\vm-template.json",
+            "uri": "https://raw.githubusercontent.com/oluwafemiitc/ARM-Templates/refs/heads/main/virtual-template.json",
             "contentVersion": "1.0.0.0"
           },
           "parameters": {
