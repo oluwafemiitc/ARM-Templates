@@ -35,7 +35,7 @@
         "properties": {
           "mode": "Incremental",
           "templateLink": {
-            "uri": "file:///D:\\Projects\\RESOURCES\\Arm-Temp\\vnet-template.json",
+            "uri": "https://raw.githubusercontent.com/oluwafemiitc/ARM-Templates/refs/heads/main/vnet-template.json",
             "contentVersion": "1.0.0.0"
           },
           "parameters": {
