@@ -11,7 +11,7 @@
       {
         "type": "Microsoft.Network/virtualNetworks",
         "apiVersion": "2021-05-01",
-        "name": "myVnet890",
+        "name": "myVnet0932",
         "location": "[parameters('location')]",
         "properties": {
           "addressSpace": {
