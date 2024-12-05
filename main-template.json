@@ -1,0 +1,94 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "type": "string",
+            "defaultValue": "myVNet"
+        },
+        "subnetName": {
+            "type": "string", 
+            "defaultValue": "mySubnet"
+        },
+        "vmName": {
+            "type": "string",
+            "defaultValue": "myVM"
+        },
+        "adminUsername": {
+            "type": "string"
+        },
+        "adminPassword": {
+            "type": "securestring"
+        },
+        "githubBaseUrl": {
+            "type": "string",
+            "defaultValue": "https://raw.githubusercontent.com/[YourUsername]/[YourRepo]/main/",
+            "metadata": {
+                "description": "Base URL for GitHub raw template files"
+            }
+        }
+    },
+    "variables": {
+        "vnetTemplateUri": "[uri(parameters('githubBaseUrl'), 'vnet-template.json')]",
+        "nicTemplateUri": "[uri(parameters('githubBaseUrl'), 'nic-template.json')]",
+        "vmTemplateUri": "[uri(parameters('githubBaseUrl'), 'vm-template.json')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "vnetDeployment",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('vnetTemplateUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vnetName": {"value": "[parameters('vnetName')]"},
+                    "subnetName": {"value": "[parameters('subnetName')]"}
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01",
+            "name": "nicDeployment",
+            "dependsOn": [
+                "vnetDeployment"
+            ],
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[variables('nicTemplateUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vnetName": {"value": "[parameters('vnetName')]"},
+                    "subnetName": {"value": "[parameters('subnetName')]"},
+                    "vmName": {"value": "[parameters('vmName')]"}
+                }
+            }
+        },
+        {
+            "type": "Microsoft.Resources/deployments",
+            "apiVersion": "2021-04-01", 
+            "name": "vmDeployment",
+            "dependsOn": [
+                "nicDeployment"
+            ],
+            "properties": {
+                "mode": "Incremental", 
+                "templateLink": {
+                    "uri": "[variables('vmTemplateUri')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "vmName": {"value": "[parameters('vmName')]"},
+                    "adminUsername": {"value": "[parameters('adminUsername')]"},
+                    "adminPassword": {"value": "[parameters('adminPassword')]"}
+                }
+            }
+        }
+    ]
+}
