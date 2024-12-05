@@ -3,25 +3,48 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vnetName": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Virtual Network"
+            }
         },
         "subnetName": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Subnet"
+            }
         },
         "vmName": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Virtual Machine"
+            }
+        },
+        "nicName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Network Interface"
+            }
+        },
+        "publicIpName": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Public IP"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location for the resources"
+            }
         }
-    },
-    "variables": {
-        "publicIPAddressName": "[concat(parameters('vmName'), '-PublicIP')]",
-        "networkInterfaceName": "[concat(parameters('vmName'), '-NIC')]"
     },
     "resources": [
         {
             "type": "Microsoft.Network/publicIPAddresses",
             "apiVersion": "2021-05-01",
-            "name": "[variables('publicIPAddressName')]",
-            "location": "[resourceGroup().location]",
+            "name": "[parameters('publicIpName')]",
+            "location": "[parameters('location')]",
             "properties": {
                 "publicIPAllocationMethod": "Dynamic"
             }
@@ -29,10 +52,10 @@
         {
             "type": "Microsoft.Network/networkInterfaces",
             "apiVersion": "2021-05-01",
-            "name": "[variables('networkInterfaceName')]", 
-            "location": "[resourceGroup().location]",
+            "name": "[parameters('nicName')]", 
+            "location": "[parameters('location')]",
             "dependsOn": [
-                "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+                "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpName'))]"
             ],
             "properties": {
                 "ipConfigurations": [
@@ -41,7 +64,7 @@
                         "properties": {
                             "privateIPAllocationMethod": "Dynamic",
                             "publicIPAddress": {
-                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('publicIPAddressName'))]"
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('publicIpName'))]"
                             },
                             "subnet": {
                                 "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
@@ -55,7 +78,7 @@
     "outputs": {
         "networkInterfaceId": {
             "type": "string",
-            "value": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
+            "value": "[resourceId('Microsoft.Network/networkInterfaces', parameters('nicName'))]"
         }
     }
 }

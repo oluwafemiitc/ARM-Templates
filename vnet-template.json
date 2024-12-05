@@ -32,37 +32,38 @@
   }
 */
 
-
 {
     "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vnetName": {
             "type": "string",
-            "defaultValue": "myVNet",
             "metadata": {
                 "description": "Name of the Virtual Network"
             }
         },
         "subnetName": {
             "type": "string",
-            "defaultValue": "mySubnet",
             "metadata": {
                 "description": "Name of the Subnet"
             }
         },
         "vnetAddressPrefix": {
             "type": "string",
-            "defaultValue": "10.0.0.0/16",
             "metadata": {
                 "description": "Address prefix for the Virtual Network"
             }
         },
         "subnetPrefix": {
             "type": "string", 
-            "defaultValue": "10.0.1.0/24",
             "metadata": {
                 "description": "Subnet prefix"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location for the resources"
             }
         }
     },
@@ -71,7 +72,7 @@
             "type": "Microsoft.Network/virtualNetworks",
             "apiVersion": "2021-05-01",
             "name": "[parameters('vnetName')]",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "properties": {
                 "addressSpace": {
                     "addressPrefixes": [
@@ -93,6 +94,10 @@
         "vnetId": {
             "type": "string", 
             "value": "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]"
+        },
+        "subnetId": {
+            "type": "string",
+            "value": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
         }
     }
 }

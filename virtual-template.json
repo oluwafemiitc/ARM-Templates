@@ -3,32 +3,43 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "vmName": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Name of the Virtual Machine"
+            }
         },
         "adminUsername": {
-            "type": "string"
+            "type": "string",
+            "metadata": {
+                "description": "Username for the Virtual Machine"
+            }
         },
         "adminPassword": {
-            "type": "securestring"
+            "type": "securestring",
+            "metadata": {
+                "description": "Password for the Virtual Machine"
+            }
+        },
+        "location": {
+            "type": "string",
+            "metadata": {
+                "description": "Location for the Virtual Machine"
+            }
         },
         "vmSize": {
             "type": "string",
-            "defaultValue": "Standard_B1s"
+            "defaultValue": "Standard_B1s",
+            "metadata": {
+                "description": "Size of the Virtual Machine"
+            }
         }
-    },
-    "variables": {
-        "networkInterfaceName": "[concat(parameters('vmName'), '-NIC')]",
-        "imagePublisher": "Canonical",
-        "imageOffer": "UbuntuServer",
-        "imageSku": "18.04-LTS",
-        "imageVersion": "latest"
     },
     "resources": [
         {
             "type": "Microsoft.Compute/virtualMachines",
             "apiVersion": "2021-11-01",
             "name": "[parameters('vmName')]",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "properties": {
                 "hardwareProfile": {
                     "vmSize": "[parameters('vmSize')]"
@@ -40,10 +51,10 @@
                 },
                 "storageProfile": {
                     "imageReference": {
-                        "publisher": "[variables('imagePublisher')]",
-                        "offer": "[variables('imageOffer')]",
-                        "sku": "[variables('imageSku')]",
-                        "version": "[variables('imageVersion')]"
+                        "publisher": "Canonical",
+                        "offer": "UbuntuServer",
+                        "sku": "18.04-LTS",
+                        "version": "latest"
                     },
                     "osDisk": {
                         "createOption": "FromImage",
@@ -51,20 +62,11 @@
                             "storageAccountType": "StandardSSD_LRS"
                         }
                     }
-                },
-                "networkProfile": {
-                    "networkInterfaces": [
-                        {
-                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('networkInterfaceName'))]"
-                        }
-                    ]
                 }
             }
         }
     ]
 }
-
-
 
 
 
